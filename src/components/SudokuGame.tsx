@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useCallback, useEffect, useState } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { EraseButton } from './EraseButton';
@@ -16,7 +17,17 @@ function SudokuGame(): JSX.Element {
   const [numpadValue, setNumpadValue] = useState<number | undefined>();
   const [sudokuArray, setSudokuArray] = useState<SudokuCell[]>(sudokuNumbers);
 
+  function clearClass() {
+    sudokuArray.forEach((item) => {
+      item.isClose = false;
+      item.isSelected = false;
+      item.isSameNumber = false;
+    });
+  }
+
   useEffect(() => {
+    clearClass();
+
     if (selectedCell != undefined) {
       let cellContainer: number;
       let cellRow: number;
@@ -38,13 +49,21 @@ function SudokuGame(): JSX.Element {
           item.container == cellContainer
         ) {
           item.isClose = true;
+          if (
+            item.value == selectedCell.innerHTML &&
+            selectedCell.innerHTML != ''
+          ) {
+            item.isSelected = true;
+          }
         }
         if (item.id == selectedCell.id) {
           item.isSelected = true;
         }
       });
+
+      setSudokuArray([...sudokuArray]);
     }
-  }, [selectedCell, sudokuArray]);
+  }, [selectedCell]);
 
   const handleErase = useCallback(() => {
     if (

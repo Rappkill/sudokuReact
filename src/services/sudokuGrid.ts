@@ -8,6 +8,7 @@ export interface SudokuCell {
   isEditable: boolean;
   isSelected: boolean;
   isClose: boolean;
+  isSameNumber: boolean;
   id: string;
   column: number;
   row: number;
@@ -48,6 +49,7 @@ export const sudokuNumbers: SudokuCell[] = puzzle.map(
     let isEditable;
     const isSelected = false;
     const isClose = false;
+    const isSameNumber = false;
     const id = index.toString();
 
     const [container, row, column] = setClass(index);
@@ -65,6 +67,7 @@ export const sudokuNumbers: SudokuCell[] = puzzle.map(
       value: value,
       isEditable: isEditable,
       isSelected: isSelected,
+      isSameNumber: isSameNumber,
       isClose: isClose,
       column: column,
       row: row,

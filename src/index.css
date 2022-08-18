@@ -93,7 +93,7 @@ body {
   transform: rotate(-1.5deg);
 }
 
-.grid-cell[contenteditable='true'] {
+.grid-cell.same-number {
   color: blue;
 }
 
