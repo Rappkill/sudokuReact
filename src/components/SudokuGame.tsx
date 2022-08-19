@@ -7,7 +7,12 @@ import { NotesButton } from './NotesButton';
 import { Numpad } from './Numpad';
 import { UndoButton } from './UndoButton';
 import { Timer } from './Timer';
-import { setCellValue } from '../services/sudokuGame';
+import {
+  setCellValue,
+  checkingClass,
+  clearClass,
+  highlightClass,
+} from '../services/sudokuGame';
 import { SudokuCell, sudokuNumbers } from '../services/sudokuGrid';
 
 function SudokuGame(): JSX.Element {
@@ -17,49 +22,12 @@ function SudokuGame(): JSX.Element {
   const [numpadValue, setNumpadValue] = useState<number | undefined>();
   const [sudokuArray, setSudokuArray] = useState<SudokuCell[]>(sudokuNumbers);
 
-  function clearClass() {
-    sudokuArray.forEach((item) => {
-      item.isClose = false;
-      item.isSelected = false;
-      item.isSameNumber = false;
-    });
-  }
-
   useEffect(() => {
-    clearClass();
+    clearClass(sudokuArray);
 
     if (selectedCell != undefined) {
-      let cellContainer: number;
-      let cellRow: number;
-      let cellColumn: number;
-
-      selectedCell.classList.forEach((cellClass) => {
-        if (cellClass.includes('container'))
-          cellContainer = Number(cellClass.split('container-').pop());
-        else if (cellClass.includes('row'))
-          cellRow = Number(cellClass.split('row-').pop());
-        else if (cellClass.includes('column'))
-          cellColumn = Number(cellClass.split('column-').pop());
-      });
-
-      sudokuArray.forEach((item) => {
-        if (
-          item.column == cellColumn ||
-          item.row == cellRow ||
-          item.container == cellContainer
-        ) {
-          item.isClose = true;
-          if (
-            item.value == selectedCell.innerHTML &&
-            selectedCell.innerHTML != ''
-          ) {
-            item.isSelected = true;
-          }
-        }
-        if (item.id == selectedCell.id) {
-          item.isSelected = true;
-        }
-      });
+      const [container, row, column] = checkingClass(selectedCell);
+      highlightClass(container, row, column, sudokuArray, selectedCell);
 
       setSudokuArray([...sudokuArray]);
     }

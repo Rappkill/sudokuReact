@@ -93,8 +93,12 @@ body {
   transform: rotate(-1.5deg);
 }
 
-.grid-cell.same-number {
-  color: blue;
+.grid-cell:not(.not-editable) {
+  color: rgb(250, 124, 6);
+}
+
+.same-number {
+  color: red;
 }
 
 .grid-cell.hidden {

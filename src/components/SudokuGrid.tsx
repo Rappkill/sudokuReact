@@ -30,11 +30,9 @@ export function SudokuGrid({
               item.column
             } container-${item.container} ${
               !item.isEditable ? 'not-editable' : ''
-            } ${item.isSelected ? 'toggle-heavy' : ''} 
-              ${item.isClose ? 'toggle' : ''}
-              ${item.isSameNumber ? 'same-number' : ''}
-             
-              `}
+            } ${item.isSelected ? 'toggle-heavy' : ''} ${
+              item.isClose ? 'toggle' : ''
+            } ${item.isSameNumber ? 'same-number' : ''}`}
             key={customKey}
             id={`${index}`}
             onClick={handleContent}
