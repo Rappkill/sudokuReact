@@ -18,21 +18,29 @@ interface CellCoordinate {
 function computeCellCoordinates(index: number): CellCoordinate {
   let row;
   let column;
-  let container = 0;
-  // de revizitat logica, expus functie pura
+  let container;
 
   row = Math.floor(index / 9) + 1;
   column = (index % 9) + 1;
 
-  if (index % 3 == 0) {
-    container++;
-  }
-  if (index % 9 == 0 && index > 0) {
-    container = container - 3;
-  }
-  if (index % 27 == 0 && index > 0) {
-    container = container + 3;
-  }
+  container =
+    Math.floor(index / 3) +
+    1 +
+    (index / 9 >= 1
+      ? index / 18 >= 1 // 9
+        ? index / 36 >= 1 // 18
+          ? index / 45 >= 1 // 9
+            ? index / 63 >= 1 // 18
+              ? index / 72 >= 1 // 9
+                ? -18
+                : -15
+              : -12
+            : -9
+          : -6
+        : -3
+      : 0);
+
+  //
 
   return { container, row, column };
 }
@@ -44,12 +52,18 @@ export function generateSudoku(): SudokuCell[] {
     const { container, row, column } = computeCellCoordinates(index);
 
     return {
+      container,
       id: index.toString(),
       notes: [],
       value,
       column,
       row,
-      container,
     };
   });
 }
+
+//function
+//increment value + 1
+
+//checking isReadOnly - values
+//

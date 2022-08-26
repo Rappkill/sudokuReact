@@ -10,7 +10,7 @@ function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
   const sudokuContainers = useMemo(() => {
     return sudokuNumbers.reduce(
       (containers: Array<Array<number | null>>, sudokuCell) => {
-        containers[sudokuCell.row - 1].push(sudokuCell.value);
+        containers[sudokuCell.container - 1].push(sudokuCell.value);
 
         return containers;
       },
