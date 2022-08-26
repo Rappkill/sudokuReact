@@ -9,8 +9,9 @@ interface SudokuGridProp {
 function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
   const sudokuContainers = useMemo(() => {
     return sudokuNumbers.reduce(
-      (containers: Array<Array<number | null>>, sudokuCell) => {
-        containers[sudokuCell.container - 1].push(sudokuCell.value);
+      (containers: Array<SudokuCell[]>, sudokuCell) => {
+        containers[sudokuCell.container - 1].push(sudokuCell);
+        console.log(sudokuCell);
 
         return containers;
       },
@@ -19,20 +20,13 @@ function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
     );
   }, [sudokuNumbers]);
 
-  console.log(sudokuContainers);
+  // console.log(sudokuContainers);
 
   return (
     <div className="sudoku-wrapper">
-      {console.log(sudokuNumbers)}
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
-      <CellContainer />
+      {sudokuContainers.map((container, index) => (
+        <CellContainer key={index} containerArray={container} />
+      ))}
     </div>
   );
 }

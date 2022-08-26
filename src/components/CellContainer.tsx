@@ -2,13 +2,14 @@ import React from 'react';
 import { SudokuCell } from '../services/sudokuService';
 import Cell from './Cell';
 
-// interface CellContainerProp {
-//   containerArray: SudokuCell[];
-// }
+interface CellContainerProp {
+  containerArray: Array<SudokuCell[]>;
+}
 
-function CellContainer(): JSX.Element {
+function CellContainer({ containerArray }: CellContainerProp): JSX.Element {
   return (
     <div className="grid-container">
+      {console.log(containerArray)}
       <Cell />
       <Cell />
       <Cell />

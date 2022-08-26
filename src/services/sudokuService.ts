@@ -45,25 +45,34 @@ function computeCellCoordinates(index: number): CellCoordinate {
   return { container, row, column };
 }
 
-export function generateSudoku(): SudokuCell[] {
+function generateSudokuNumbers() {
   const puzzle: [] = makepuzzle();
+
+  return puzzle.map((value: number) => {
+    if (value != null) {
+      return (value = value + 1);
+    } else {
+      return value;
+    }
+  });
+}
+
+export function generateSudoku(): SudokuCell[] {
+  const puzzle = generateSudokuNumbers();
 
   return puzzle.map((value: number, index: number) => {
     const { container, row, column } = computeCellCoordinates(index);
 
     return {
-      container,
       id: index.toString(),
       notes: [],
       value,
       column,
       row,
+      container,
     };
   });
 }
-
-//function
-//increment value + 1
 
 //checking isReadOnly - values
 //
