@@ -1,67 +1,41 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-import React, { useCallback, useEffect, useState } from 'react';
-import { SudokuGrid } from './SudokuGrid';
+import React, { useCallback, useState } from 'react';
 import { EraseButton } from './EraseButton';
-import { NewgameButton } from './NewgameButton';
+import { NewGameButton } from './NewGameButton';
 import { NotesButton } from './NotesButton';
 import { Numpad } from './Numpad';
-import { UndoButton } from './UndoButton';
+import SudokuGrid from './SudokuGrid';
 import { Timer } from './Timer';
-import {
-  setCellValue,
-  checkingClass,
-  clearClass,
-  highlightClass,
-} from '../services/sudokuGame';
-import { SudokuCell, sudokuNumbers } from '../services/sudokuGrid';
+import { UndoButton } from './UndoButton';
+import { generateSudoku, SudokuCell } from '../services/sudokuService';
 
 function SudokuGame(): JSX.Element {
-  const [selectedCell, setSelectedCell] = useState<HTMLDivElement | undefined>(
-    undefined
-  );
-  const [numpadValue, setNumpadValue] = useState<number | undefined>();
-  const [sudokuArray, setSudokuArray] = useState<SudokuCell[]>(sudokuNumbers);
+  const [sudokuPuzzle, setSudokuPuzzle] = useState<SudokuCell[]>([]);
 
-  useEffect(() => {
-    clearClass(sudokuArray);
-
-    if (selectedCell != undefined) {
-      const [container, row, column] = checkingClass(selectedCell);
-      highlightClass(container, row, column, sudokuArray, selectedCell);
-
-      setSudokuArray([...sudokuArray]);
-    }
-  }, [selectedCell]);
-
-  const handleErase = useCallback(() => {
-    if (
-      selectedCell != undefined &&
-      !selectedCell.className.includes('not-editable')
-    ) {
-      selectedCell.innerHTML = '';
-    }
-  }, [selectedCell]);
-
-  useEffect(() => {
-    if (selectedCell != undefined && numpadValue != undefined) {
-      setCellValue(selectedCell, numpadValue);
-    }
-  }, [numpadValue]);
+  const handleNewGame = useCallback(() => {
+    const newSudokuPuzzle = generateSudoku();
+    setSudokuPuzzle(newSudokuPuzzle);
+  }, []);
 
   return (
     <div className="game-wrapper">
-      <SudokuGrid setSelectedCell={setSelectedCell} sudokuArray={sudokuArray} />
-      <div className="buttons-wrapper">
+      <SudokuGrid sudokuNumbers={sudokuPuzzle} />
+      <div className="button-wrapper">
         <Timer />
-        <NewgameButton />
+        <NewGameButton onNewGameClick={handleNewGame} />
         <div className="buttons-control">
           <UndoButton />
-          <EraseButton handleErase={handleErase} />
+          <EraseButton />
           <NotesButton />
         </div>
-        <Numpad setNumpadValue={setNumpadValue} />
+        <Numpad />
       </div>
     </div>
   );
 }
+
 export default SudokuGame;
+
+//model cell
+//
+//state array
+//pass

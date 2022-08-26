@@ -1,10 +1,14 @@
 import React from 'react';
-function handleNewGame() {
-  console.log('new');
+
+interface NewGameButtonProp {
+  onNewGameClick(): void;
 }
-export function NewgameButton(): JSX.Element {
+
+export function NewGameButton({
+  onNewGameClick,
+}: NewGameButtonProp): JSX.Element {
   return (
-    <button className="new-game-btn" onClick={handleNewGame}>
+    <button className="new-game-btn" onClick={onNewGameClick}>
       New Game
     </button>
   );
