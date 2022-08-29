@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { SudokuCell } from '../services/sudokuService';
+import React, { useMemo } from 'react';
+import { SudokuCell, getContainers } from '../services/sudokuService';
 import CellContainer from './CellContainer';
 
 interface SudokuGridProp {
@@ -7,30 +7,21 @@ interface SudokuGridProp {
 }
 
 function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
-  const sudokuContainers = useMemo(() => {
-    return sudokuNumbers.reduce(
-      (containers: Array<SudokuCell[]>, sudokuCell) => {
-        containers[sudokuCell.container - 1].push(sudokuCell);
-        console.log(sudokuCell);
-
-        return containers;
-      },
-      [[], [], [], [], [], [], [], [], []]
-      // new Array(9).fill([])
-    );
-  }, [sudokuNumbers]);
-
-  // console.log(sudokuContainers);
+  const sudokuContainers = useMemo(
+    () => getContainers(sudokuNumbers),
+    [sudokuNumbers]
+  );
 
   return (
     <div className="sudoku-wrapper">
-      {sudokuContainers.map((container, index) => (
-        <CellContainer key={index} containerArray={container} />
-      ))}
+      {console.log(sudokuContainers)}
+      {sudokuContainers.map((container, index) => {
+        const key = index.toString();
+
+        return <CellContainer key={key} cellList={container} />;
+      })}
     </div>
   );
 }
 
 export default SudokuGrid;
-
-//pass props to container

@@ -3,22 +3,15 @@ import { SudokuCell } from '../services/sudokuService';
 import Cell from './Cell';
 
 interface CellContainerProp {
-  containerArray: Array<SudokuCell[]>;
+  cellList: SudokuCell[];
 }
 
-function CellContainer({ containerArray }: CellContainerProp): JSX.Element {
+function CellContainer({ cellList }: CellContainerProp): JSX.Element {
   return (
     <div className="grid-container">
-      {console.log(containerArray)}
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
-      <Cell />
+      {cellList.map((cell) => {
+        return <Cell key={cell.id} cell={cell} />;
+      })}
     </div>
   );
 }

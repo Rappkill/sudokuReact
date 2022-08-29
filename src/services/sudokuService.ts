@@ -7,6 +7,7 @@ export interface SudokuCell {
   column: number;
   container: number;
   row: number;
+  isReadOnly: boolean;
 }
 
 interface CellCoordinate {
@@ -16,31 +17,18 @@ interface CellCoordinate {
 }
 
 function computeCellCoordinates(index: number): CellCoordinate {
-  let row;
-  let column;
-  let container;
+  let row = 0;
+  let column = 0;
+  let container = 0;
 
   row = Math.floor(index / 9) + 1;
   column = (index % 9) + 1;
 
   container =
-    Math.floor(index / 3) +
-    1 +
-    (index / 9 >= 1
-      ? index / 18 >= 1 // 9
-        ? index / 36 >= 1 // 18
-          ? index / 45 >= 1 // 9
-            ? index / 63 >= 1 // 18
-              ? index / 72 >= 1 // 9
-                ? -18
-                : -15
-              : -12
-            : -9
-          : -6
-        : -3
-      : 0);
-
-  //
+    Math.floor(index / 3) -
+    Math.floor(index / 9) * 3 +
+    Math.floor(index / 27) * 3 +
+    1;
 
   return { container, row, column };
 }
@@ -57,11 +45,20 @@ function generateSudokuNumbers() {
   });
 }
 
+function checkIsReadOnly(value: number): boolean {
+  if (value == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export function generateSudoku(): SudokuCell[] {
   const puzzle = generateSudokuNumbers();
 
   return puzzle.map((value: number, index: number) => {
     const { container, row, column } = computeCellCoordinates(index);
+    const isReadOnly = checkIsReadOnly(value);
 
     return {
       id: index.toString(),
@@ -70,9 +67,20 @@ export function generateSudoku(): SudokuCell[] {
       column,
       row,
       container,
+      isReadOnly,
     };
   });
 }
 
-//checking isReadOnly - values
-//
+export function getContainers(
+  sudokuNumbers: SudokuCell[]
+): Array<SudokuCell[]> {
+  return sudokuNumbers.reduce(
+    (containers: Array<SudokuCell[]>, sudokuCell) => {
+      containers[sudokuCell.container - 1].push(sudokuCell);
+
+      return containers;
+    },
+    [[], [], [], [], [], [], [], [], []]
+  );
+}
