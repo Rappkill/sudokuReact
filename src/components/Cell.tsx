@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { SudokuCell } from '../services/sudokuService';
 
 interface CellProp {
   cell: SudokuCell;
+  handleSelectedCell(cell: SudokuCell): void;
 }
 
-function Cell({ cell }: CellProp): JSX.Element {
-  return <div className="grid-cell">{cell.value}</div>;
+function Cell({ cell, handleSelectedCell }: CellProp): JSX.Element {
+  const handleClick = useCallback(() => {
+    handleSelectedCell(cell);
+  }, []);
+
+  return (
+    <div
+      className={`grid-cell row-${cell.row} column-${cell.column} container-${cell.container}`}
+      onClick={handleClick}
+    >
+      {cell.value}
+    </div>
+  );
 }
 
 export default Cell;

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { EraseButton } from './EraseButton';
 import { NewGameButton } from './NewGameButton';
 import { NotesButton } from './NotesButton';
@@ -9,7 +9,42 @@ import { UndoButton } from './UndoButton';
 import { generateSudoku, SudokuCell } from '../services/sudokuService';
 
 function SudokuGame(): JSX.Element {
-  const [sudokuPuzzle, setSudokuPuzzle] = useState<SudokuCell[]>([]);
+  const [sudokuPuzzle, setSudokuPuzzle] = useState<SudokuCell[]>(() =>
+    generateSudoku()
+  );
+  const [selectedCell, setSelectedCell] = useState<SudokuCell>();
+
+  const handleSelectedCell = useCallback((cell) => {
+    setSelectedCell(cell);
+
+    console.log(cell);
+  }, []);
+
+  // const handleAddNumber = useCallback(
+  //   (number) => {
+  //     sudokuPuzzle.map((item) => {
+  //       if (item.id == selectedCell.id) {
+  //         item.value = number;
+  //       }
+  //     });
+
+  //     setSudokuPuzzle([...sudokuPuzzle]);
+  //   },
+  //   [selectedCell]
+  // );
+
+  const handleAddNumber = useCallback(
+    (number) => {
+      console.log(number);
+
+      console.log(selectedCell);
+    },
+    [selectedCell]
+  );
+
+  const handleErase = useCallback(() => {
+    console.log(selectedCell);
+  }, [selectedCell]);
 
   const handleNewGame = useCallback(() => {
     const newSudokuPuzzle = generateSudoku();
@@ -18,24 +53,22 @@ function SudokuGame(): JSX.Element {
 
   return (
     <div className="game-wrapper">
-      <SudokuGrid sudokuNumbers={sudokuPuzzle} />
+      <SudokuGrid
+        sudokuNumbers={sudokuPuzzle}
+        handleSelectedCell={handleSelectedCell}
+      />
       <div className="button-wrapper">
         <Timer />
         <NewGameButton onNewGameClick={handleNewGame} />
         <div className="buttons-control">
           <UndoButton />
-          <EraseButton />
+          <EraseButton handleErase={handleErase} />
           <NotesButton />
         </div>
-        <Numpad />
+        <Numpad handleAddNumber={handleAddNumber} />
       </div>
     </div>
   );
 }
 
 export default SudokuGame;
-
-//model cell
-//
-//state array
-//pass

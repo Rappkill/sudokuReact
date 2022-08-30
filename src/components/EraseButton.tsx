@@ -1,5 +1,13 @@
 import React from 'react';
 
-export function EraseButton(): JSX.Element {
-  return <button className="action-button">Erase</button>;
+interface EraseProp {
+  handleErase(): void;
+}
+
+export function EraseButton({ handleErase }: EraseProp): JSX.Element {
+  return (
+    <button className="action-button" onClick={handleErase}>
+      Erase
+    </button>
+  );
 }

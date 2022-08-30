@@ -4,15 +4,25 @@ import Cell from './Cell';
 
 interface CellContainerProp {
   cellList: SudokuCell[];
+  handleSelectedCell(cell: SudokuCell): void;
 }
 
-function CellContainer({ cellList }: CellContainerProp): JSX.Element {
+function CellContainer({
+  cellList,
+  handleSelectedCell,
+}: CellContainerProp): JSX.Element {
   return (
-    <div className="grid-container">
+    <>
       {cellList.map((cell) => {
-        return <Cell key={cell.id} cell={cell} />;
+        return (
+          <Cell
+            key={cell.id}
+            cell={cell}
+            handleSelectedCell={handleSelectedCell}
+          />
+        );
       })}
-    </div>
+    </>
   );
 }
 

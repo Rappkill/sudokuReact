@@ -4,9 +4,13 @@ import CellContainer from './CellContainer';
 
 interface SudokuGridProp {
   sudokuNumbers: SudokuCell[];
+  handleSelectedCell(cell: SudokuCell): void;
 }
 
-function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
+function SudokuGrid({
+  sudokuNumbers,
+  handleSelectedCell,
+}: SudokuGridProp): JSX.Element {
   const sudokuContainers = useMemo(
     () => getContainers(sudokuNumbers),
     [sudokuNumbers]
@@ -14,11 +18,18 @@ function SudokuGrid({ sudokuNumbers }: SudokuGridProp): JSX.Element {
 
   return (
     <div className="sudoku-wrapper">
-      {console.log(sudokuContainers)}
       {sudokuContainers.map((container, index) => {
         const key = index.toString();
 
-        return <CellContainer key={key} cellList={container} />;
+        return (
+          <div key={key} className={`grid-container ${index + 1}`}>
+            <CellContainer
+              key={key}
+              cellList={container}
+              handleSelectedCell={handleSelectedCell}
+            />
+          </div>
+        );
       })}
     </div>
   );
