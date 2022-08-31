@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { EraseButton } from './EraseButton';
 import { NewGameButton } from './NewGameButton';
 import { NotesButton } from './NotesButton';
@@ -12,38 +18,40 @@ function SudokuGame(): JSX.Element {
   const [sudokuPuzzle, setSudokuPuzzle] = useState<SudokuCell[]>(() =>
     generateSudoku()
   );
-  const [selectedCell, setSelectedCell] = useState<SudokuCell>();
+  const [selectedCell, setSelectedCell] = useState<SudokuCell>(sudokuPuzzle[0]);
+  const [activeNotes, setActiveNotes] = useState<boolean>(false);
 
   const handleSelectedCell = useCallback((cell) => {
     setSelectedCell(cell);
-
-    console.log(cell);
   }, []);
 
-  // const handleAddNumber = useCallback(
-  //   (number) => {
-  //     sudokuPuzzle.map((item) => {
-  //       if (item.id == selectedCell.id) {
-  //         item.value = number;
-  //       }
-  //     });
+  const handleNotes = useCallback(() => {
+    setActiveNotes((prevValue) => !prevValue);
+  }, [activeNotes]);
 
-  //     setSudokuPuzzle([...sudokuPuzzle]);
-  //   },
-  //   [selectedCell]
-  // );
-
-  const handleAddNumber = useCallback(
+  const assignNumpadValue = useCallback(
     (number) => {
-      console.log(number);
+      sudokuPuzzle.map((item) => {
+        if (!item.isReadOnly && item.id == selectedCell.id) {
+          item.value = number;
+        }
+      });
 
-      console.log(selectedCell);
+      setSudokuPuzzle([...sudokuPuzzle]);
     },
     [selectedCell]
   );
 
   const handleErase = useCallback(() => {
-    console.log(selectedCell);
+    console.log(activeNotes);
+
+    sudokuPuzzle.map((item) => {
+      if (!item.isReadOnly && item.id == selectedCell.id) {
+        item.value = null;
+      }
+    });
+
+    setSudokuPuzzle([...sudokuPuzzle]);
   }, [selectedCell]);
 
   const handleNewGame = useCallback(() => {
@@ -56,6 +64,7 @@ function SudokuGame(): JSX.Element {
       <SudokuGrid
         sudokuNumbers={sudokuPuzzle}
         handleSelectedCell={handleSelectedCell}
+        isActiveNotes={activeNotes}
       />
       <div className="button-wrapper">
         <Timer />
@@ -63,9 +72,9 @@ function SudokuGame(): JSX.Element {
         <div className="buttons-control">
           <UndoButton />
           <EraseButton handleErase={handleErase} />
-          <NotesButton />
+          <NotesButton handleNotes={handleNotes} isActiveNotes={activeNotes} />
         </div>
-        <Numpad handleAddNumber={handleAddNumber} />
+        <Numpad assignNumpadValue={assignNumpadValue} cell={selectedCell} />
       </div>
     </div>
   );
