@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useState } from 'react';
 import { EraseButton } from './EraseButton';
 import { NewGameButton } from './NewGameButton';
 import { NotesButton } from './NotesButton';
@@ -33,20 +27,26 @@ function SudokuGame(): JSX.Element {
     (number) => {
       sudokuPuzzle.map((item) => {
         if (!item.isReadOnly && item.id == selectedCell.id) {
-          item.value = number;
+          if (activeNotes) {
+            if (!item.notes.includes(number)) {
+              item.notes.push(number);
+            }
+          } else {
+            item.notes = [];
+            item.value = number;
+          }
         }
       });
 
       setSudokuPuzzle([...sudokuPuzzle]);
     },
-    [selectedCell]
+    [selectedCell, activeNotes]
   );
 
   const handleErase = useCallback(() => {
-    console.log(activeNotes);
-
     sudokuPuzzle.map((item) => {
       if (!item.isReadOnly && item.id == selectedCell.id) {
+        item.notes = [];
         item.value = null;
       }
     });
@@ -64,7 +64,7 @@ function SudokuGame(): JSX.Element {
       <SudokuGrid
         sudokuNumbers={sudokuPuzzle}
         handleSelectedCell={handleSelectedCell}
-        isActiveNotes={activeNotes}
+        selectedCell={selectedCell}
       />
       <div className="button-wrapper">
         <Timer />
@@ -74,7 +74,11 @@ function SudokuGame(): JSX.Element {
           <EraseButton handleErase={handleErase} />
           <NotesButton handleNotes={handleNotes} isActiveNotes={activeNotes} />
         </div>
-        <Numpad assignNumpadValue={assignNumpadValue} cell={selectedCell} />
+        <Numpad
+          assignNumpadValue={assignNumpadValue}
+          cell={selectedCell}
+          isActive={activeNotes}
+        />
       </div>
     </div>
   );

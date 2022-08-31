@@ -60,7 +60,7 @@ body {
   transform: rotate(-1.5deg);
 }
 
-.grid-cell[contenteditable='true'] {
+.grid-cell.editable {
   color: blue;
 }
 
@@ -320,24 +320,20 @@ body {
   font-size: 0.8rem;
   margin: 0px;
   padding: 0px;
-  visibility: hidden;
-}
-
-.notes-cell {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0;
-  align-items: center;
-  justify-content: center;
-}
-
-.notes-class.visible {
   visibility: visible;
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: center;
   align-items: center;
   user-select: none;
   pointer-events: none;
+}
+
+.notes-cell {
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: -10;
 }
 
 .timer {

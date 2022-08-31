@@ -1,9 +1,9 @@
 import { makepuzzle } from 'sudoku';
 
 export interface SudokuCell {
+  id: string;
   value: number | null;
   notes: number[];
-  id: string;
   column: number;
   container: number;
   row: number;
