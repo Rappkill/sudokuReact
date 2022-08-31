@@ -3,6 +3,7 @@ import { SudokuCell } from '../services/sudokuService';
 import Cell from './Cell';
 
 interface CellContainerProp {
+  isActiveNotes: boolean;
   cellList: SudokuCell[];
   handleSelectedCell(cell: SudokuCell): void;
 }
@@ -10,6 +11,7 @@ interface CellContainerProp {
 function CellContainer({
   cellList,
   handleSelectedCell,
+  isActiveNotes,
 }: CellContainerProp): JSX.Element {
   return (
     <>
@@ -19,6 +21,7 @@ function CellContainer({
             key={cell.id}
             cell={cell}
             handleSelectedCell={handleSelectedCell}
+            isActiveNotes={isActiveNotes}
           />
         );
       })}

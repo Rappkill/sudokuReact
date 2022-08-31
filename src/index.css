@@ -199,7 +199,7 @@ body {
   transition: all 0.3s;
 }
 
-.notes-btn.active {
+.action-button.activeNotes {
   color: rgb(250, 124, 6);
 }
 

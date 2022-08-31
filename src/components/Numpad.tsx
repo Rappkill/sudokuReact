@@ -1,16 +1,21 @@
-import React, { useCallback } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
+import { SudokuCell } from '../services/sudokuService';
 
 const numpadNumbers: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 interface NumpadProp {
-  handleAddNumber(number: number): void;
+  assignNumpadValue(value: number): void;
+  cell: SudokuCell;
 }
 
-export function Numpad({ handleAddNumber }: NumpadProp): JSX.Element {
-  const checkNumpadValue = useCallback((e) => {
-    const value = Number(e.target.value);
-    handleAddNumber(value);
-  }, []);
+export function Numpad({ assignNumpadValue, cell }: NumpadProp): JSX.Element {
+  const checkNumpadValue = useCallback(
+    (e) => {
+      const value = Number(e.target.value);
+      assignNumpadValue(value);
+    },
+    [cell]
+  );
 
   return (
     <div className="numpad-wrapper">

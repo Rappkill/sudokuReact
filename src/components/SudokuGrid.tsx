@@ -3,6 +3,7 @@ import { SudokuCell, getContainers } from '../services/sudokuService';
 import CellContainer from './CellContainer';
 
 interface SudokuGridProp {
+  isActiveNotes: boolean;
   sudokuNumbers: SudokuCell[];
   handleSelectedCell(cell: SudokuCell): void;
 }
@@ -10,6 +11,7 @@ interface SudokuGridProp {
 function SudokuGrid({
   sudokuNumbers,
   handleSelectedCell,
+  isActiveNotes,
 }: SudokuGridProp): JSX.Element {
   const sudokuContainers = useMemo(
     () => getContainers(sudokuNumbers),
@@ -27,6 +29,7 @@ function SudokuGrid({
               key={key}
               cellList={container}
               handleSelectedCell={handleSelectedCell}
+              isActiveNotes={isActiveNotes}
             />
           </div>
         );
