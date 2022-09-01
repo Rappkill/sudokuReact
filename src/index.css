@@ -325,15 +325,14 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
   justify-content: center;
   align-items: center;
-  user-select: none;
-  pointer-events: none;
 }
 
 .notes-cell {
   gap: 0;
   align-items: center;
   justify-content: center;
-  z-index: -10;
+  user-select: none;
+  pointer-events: none;
 }
 
 .timer {

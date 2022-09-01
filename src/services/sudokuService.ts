@@ -8,6 +8,7 @@ export interface SudokuCell {
   container: number;
   row: number;
   isReadOnly: boolean;
+  isWrong: boolean;
 }
 
 interface CellCoordinate {
@@ -68,6 +69,7 @@ export function generateSudoku(): SudokuCell[] {
       row,
       container,
       isReadOnly,
+      isWrong: false,
     };
   });
 }
@@ -83,4 +85,82 @@ export function getContainers(
     },
     [[], [], [], [], [], [], [], [], []]
   );
+}
+
+export function highlightAssociatedCells(
+  selectedCell: SudokuCell,
+  cell: SudokuCell
+): boolean {
+  if (
+    selectedCell.container == cell.container ||
+    selectedCell.row == cell.row ||
+    selectedCell.column == cell.column
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function getClassName(
+  selectedCell: SudokuCell,
+  cell: SudokuCell
+): string {
+  let className = 'grid-cell';
+
+  className += ` row-${cell.row}`;
+  className += ` column-${cell.column}`;
+  className += ` container-${cell.container}`;
+
+  if (!cell.isReadOnly) {
+    className += ' editable';
+  }
+
+  if (cell.notes.length != 0) {
+    className += ' notes-class';
+  }
+
+  if (selectedCell.id == cell.id) {
+    className += ' toggle-heavy';
+  }
+
+  if (highlightAssociatedCells(selectedCell, cell)) {
+    className += ' toggle';
+  }
+
+  if (selectedCell.value == cell.value && selectedCell.value != null) {
+    className += ' same';
+  }
+
+  if (cell.isWrong) {
+    className += ' wrong';
+  }
+
+  return className;
+}
+
+export function checkWrongNumbers(
+  sudokuCells: SudokuCell[],
+  sudokuCell: SudokuCell
+): boolean {
+  let isWrong = false;
+
+  sudokuCells.forEach((item) => {
+    if (item.id == sudokuCell.id) {
+      return isWrong;
+    }
+    if (item.value && sudokuCell.value) {
+      if (item.value == sudokuCell.value) {
+        if (item.row == sudokuCell.row) {
+          isWrong = true;
+        } else if (item.column == sudokuCell.column) {
+          isWrong = true;
+        } else if (item.container == sudokuCell.container) {
+          isWrong = true;
+        }
+      }
+    }
+  });
+
+  return isWrong;
 }

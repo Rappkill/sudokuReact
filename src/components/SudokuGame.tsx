@@ -6,7 +6,11 @@ import { Numpad } from './Numpad';
 import SudokuGrid from './SudokuGrid';
 import { Timer } from './Timer';
 import { UndoButton } from './UndoButton';
-import { generateSudoku, SudokuCell } from '../services/sudokuService';
+import {
+  generateSudoku,
+  SudokuCell,
+  checkWrongNumbers,
+} from '../services/sudokuService';
 
 function SudokuGame(): JSX.Element {
   const [sudokuPuzzle, setSudokuPuzzle] = useState<SudokuCell[]>(() =>
@@ -29,6 +33,7 @@ function SudokuGame(): JSX.Element {
         if (!item.isReadOnly && item.id == selectedCell.id) {
           if (activeNotes) {
             if (!item.notes.includes(number)) {
+              item.value = null;
               item.notes.push(number);
             }
           } else {
@@ -36,6 +41,10 @@ function SudokuGame(): JSX.Element {
             item.value = number;
           }
         }
+      });
+
+      sudokuPuzzle.map((item) => {
+        item.isWrong = checkWrongNumbers(sudokuPuzzle, item);
       });
 
       setSudokuPuzzle([...sudokuPuzzle]);
@@ -49,6 +58,10 @@ function SudokuGame(): JSX.Element {
         item.notes = [];
         item.value = null;
       }
+    });
+
+    sudokuPuzzle.map((item) => {
+      item.isWrong = checkWrongNumbers(sudokuPuzzle, item);
     });
 
     setSudokuPuzzle([...sudokuPuzzle]);
@@ -74,11 +87,7 @@ function SudokuGame(): JSX.Element {
           <EraseButton handleErase={handleErase} />
           <NotesButton handleNotes={handleNotes} isActiveNotes={activeNotes} />
         </div>
-        <Numpad
-          assignNumpadValue={assignNumpadValue}
-          cell={selectedCell}
-          isActive={activeNotes}
-        />
+        <Numpad assignNumpadValue={assignNumpadValue} />
       </div>
     </div>
   );
