@@ -10,6 +10,8 @@ body {
 }
 .header {
   font-family: 'Rockwell';
+  font-size: larger;
+  margin-left: 3rem;
 }
 
 .footer {
@@ -71,6 +73,7 @@ body {
 .game-wrapper {
   position: relative;
   display: flex;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -266,6 +269,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 3rem;
+    margin-left: 5rem;
   }
 
   .new-game-btn {
@@ -309,11 +313,11 @@ body {
 }
 
 .same {
-  background-color: rgb(101, 185, 213);
+  background-color: rgba(101, 185, 213, 0.432);
 }
 
 .wrong {
-  background-color: rgb(238, 175, 168);
+  background-color: rgba(238, 175, 168, 0.541);
 }
 
 .notes-class {
@@ -338,7 +342,9 @@ body {
 .timer {
   display: flex;
   flex-direction: row;
+  justify-content: end;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   row-gap: 10px;
   color: #b48d26;
   font-size: 1.5em;

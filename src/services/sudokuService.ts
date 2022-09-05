@@ -46,20 +46,12 @@ function generateSudokuNumbers() {
   });
 }
 
-function checkIsReadOnly(value: number): boolean {
-  if (value == null) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
 export function generateSudoku(): SudokuCell[] {
   const puzzle = generateSudokuNumbers();
 
   return puzzle.map((value: number, index: number) => {
     const { container, row, column } = computeCellCoordinates(index);
-    const isReadOnly = checkIsReadOnly(value);
+    const isReadOnly = value != null;
 
     return {
       id: index.toString(),
@@ -74,10 +66,8 @@ export function generateSudoku(): SudokuCell[] {
   });
 }
 
-export function getContainers(
-  sudokuNumbers: SudokuCell[]
-): Array<SudokuCell[]> {
-  return sudokuNumbers.reduce(
+export function getContainers(sudokuCells: SudokuCell[]): Array<SudokuCell[]> {
+  return sudokuCells.reduce(
     (containers: Array<SudokuCell[]>, sudokuCell) => {
       containers[sudokuCell.container - 1].push(sudokuCell);
 
@@ -87,80 +77,90 @@ export function getContainers(
   );
 }
 
-export function highlightAssociatedCells(
+export function checkShouldHighlightCell(
   selectedCell: SudokuCell,
   cell: SudokuCell
 ): boolean {
-  if (
+  return (
     selectedCell.container == cell.container ||
     selectedCell.row == cell.row ||
     selectedCell.column == cell.column
-  ) {
-    return true;
-  } else {
-    return false;
-  }
+  );
 }
 
 export function getClassName(
   selectedCell: SudokuCell,
   cell: SudokuCell
 ): string {
-  let className = 'grid-cell';
+  const classNames = ['grid-cell'];
 
-  className += ` row-${cell.row}`;
-  className += ` column-${cell.column}`;
-  className += ` container-${cell.container}`;
+  classNames.push(`row-${cell.row}`);
+  classNames.push(`column-${cell.column}`);
+  classNames.push(`container-${cell.container}`);
 
   if (!cell.isReadOnly) {
-    className += ' editable';
+    classNames.push('editable');
   }
 
   if (cell.notes.length != 0) {
-    className += ' notes-class';
+    classNames.push('notes-class');
   }
 
   if (selectedCell.id == cell.id) {
-    className += ' toggle-heavy';
+    classNames.push('toggle-heavy');
   }
 
-  if (highlightAssociatedCells(selectedCell, cell)) {
-    className += ' toggle';
+  if (checkShouldHighlightCell(selectedCell, cell)) {
+    classNames.push('toggle');
   }
 
   if (selectedCell.value == cell.value && selectedCell.value != null) {
-    className += ' same';
+    classNames.push('same');
   }
 
   if (cell.isWrong) {
-    className += ' wrong';
+    classNames.push('wrong');
   }
 
-  return className;
+  return classNames.join(' ');
 }
 
-export function checkWrongNumbers(
-  sudokuCells: SudokuCell[],
-  sudokuCell: SudokuCell
+function isSudokuCellInvalid(
+  currentCell: SudokuCell,
+  sudokuCells: SudokuCell[]
 ): boolean {
-  let isWrong = false;
+  let isInvalid = false;
 
-  sudokuCells.forEach((item) => {
-    if (item.id == sudokuCell.id) {
-      return isWrong;
+  sudokuCells.forEach((sudokuCell) => {
+    if (sudokuCell.id == currentCell.id) {
+      return;
     }
-    if (item.value && sudokuCell.value) {
-      if (item.value == sudokuCell.value) {
-        if (item.row == sudokuCell.row) {
-          isWrong = true;
-        } else if (item.column == sudokuCell.column) {
-          isWrong = true;
-        } else if (item.container == sudokuCell.container) {
-          isWrong = true;
+    if (sudokuCell.value && currentCell.value) {
+      if (sudokuCell.value == currentCell.value) {
+        if (sudokuCell.row == currentCell.row) {
+          isInvalid = true;
+        } else if (sudokuCell.column == currentCell.column) {
+          isInvalid = true;
+        } else if (sudokuCell.container == currentCell.container) {
+          isInvalid = true;
         }
       }
     }
   });
 
-  return isWrong;
+  return isInvalid;
+}
+
+export function checkWrongNumbers(sudokuPuzzle: SudokuCell[]): void {
+  sudokuPuzzle.map((item) => {
+    item.isWrong = isSudokuCellInvalid(item, sudokuPuzzle);
+  });
+}
+
+export function formatTime(minutes: number, seconds: number): string {
+  const minutesString = minutes > 9 ? minutes.toString() : '0' + minutes;
+
+  const secondsString = seconds > 9 ? seconds.toString() : '0' + seconds;
+
+  return `${minutesString}:${secondsString}`;
 }

@@ -1,5 +1,13 @@
 import React from 'react';
 
-export function UndoButton(): JSX.Element {
-  return <button className="action-button">Undo</button>;
+interface UndoProp {
+  handleUndo(): void;
+}
+
+export function UndoButton({ handleUndo }: UndoProp): JSX.Element {
+  return (
+    <button className="action-button" onClick={handleUndo}>
+      Undo
+    </button>
+  );
 }

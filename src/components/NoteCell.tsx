@@ -1,9 +1,9 @@
 import React from 'react';
 
 interface NoteCellProp {
-  noteValue: number | null;
+  value: number | null;
 }
 
-export function NoteCell({ noteValue }: NoteCellProp): JSX.Element {
-  return <div className="notes-cell">{noteValue}</div>;
+export function NoteCell({ value }: NoteCellProp): JSX.Element {
+  return <div className="notes-cell">{value}</div>;
 }

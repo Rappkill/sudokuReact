@@ -1,48 +1,64 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { formatTime } from '../services/sudokuService';
 
-export function Timer(): JSX.Element {
+interface TimerProp {
+  handleTimerReset: boolean;
+}
+
+export function Timer({ handleTimerReset }: TimerProp): JSX.Element {
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [isPaused, setPause] = useState(false);
+
+  useEffect(() => {
+    setMinutes(0);
+    setSeconds(0);
+  }, [handleTimerReset]);
+
+  useEffect(() => {
+    if (!isPaused) {
+      const myInterval = setInterval(() => {
+        let newSeconds = seconds + 1;
+        let newMinutes = minutes;
+
+        if (newSeconds == 60) {
+          newSeconds = 0;
+          newMinutes++;
+        }
+
+        if (newMinutes == 60) {
+          newMinutes = 0;
+        }
+
+        setSeconds(newSeconds);
+        setMinutes(newMinutes);
+      }, 1000);
+
+      return () => {
+        clearInterval(myInterval);
+      };
+    }
+  }, [isPaused, seconds, minutes]);
+
+  const handleTimerPause = useCallback(() => {
+    setPause(true);
+  }, []);
+
+  const handleTimerPlay = useCallback(() => {
+    setPause(false);
+  }, []);
+
   return (
     <div className="timer">
-      <label htmlFor="" className="minutes"></label>
-      <span className="span">:</span>
-      <label htmlFor="" className="seconds"></label>
-      <button className="pause-btn"></button>
-      <button className="play-btn"></button>
+      <button
+        className={`play-btn ${!isPaused ? 'inactive' : ''}`}
+        onClick={handleTimerPlay}
+      ></button>
+      <button
+        className={`pause-btn ${isPaused ? 'inactive' : ''}`}
+        onClick={handleTimerPause}
+      ></button>
+      <span>{formatTime(minutes, seconds)}</span>
     </div>
   );
 }
-
-// export function handleTimerPause(e) {
-//   isPaused = true;
-//   document.querySelector(".pause-btn").classList.add("inactive");
-//   document.querySelector(".play-btn").classList.remove("inactive");
-//   e.preventDefault();
-//   document
-//     .querySelectorAll(".grid-cell")
-//     .forEach((elem) => elem.classList.add("hidden"));
-// }
-
-// function setTimeValue(totalSeconds) {
-//   let timeValue = totalSeconds + "";
-//   if (timeValue.length < 2) {
-//     return "0" + timeValue;
-//   }
-//   return timeValue;
-// }
-
-// let totalSeconds = 0;
-// let isPaused = false;
-
-// setInterval(function () {
-//   if (!isPaused) {
-//     setTime();
-//   }
-// }, 1000);
-
-// function setTime() {
-//   let secondsLabel = document.querySelector(".seconds");
-//   let minutesLabel = document.querySelector(".minutes");
-//   totalSeconds++;
-//   secondsLabel.innerHTML = setTimeValue(totalSeconds % 60);
-//   minutesLabel.innerHTML = setTimeValue(Math.floor(totalSeconds / 60));
-// }

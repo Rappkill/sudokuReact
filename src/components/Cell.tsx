@@ -8,7 +8,7 @@ interface CellProp {
   selectedCell: SudokuCell;
 }
 
-const nineList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const noteValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function Cell({
   cell,
@@ -17,17 +17,17 @@ function Cell({
 }: CellProp): JSX.Element {
   const handleClick = useCallback(() => {
     handleSelectedCell(cell);
-  }, []);
+  }, [handleSelectedCell, cell]);
 
   const getNotesValue = () => {
-    return nineList.map((notePosition) => {
-      let noteValue = null;
+    return noteValues.map((noteValue) => {
+      let value = null;
 
-      if (cell.notes.includes(notePosition)) {
-        noteValue = notePosition;
+      if (cell.notes.includes(noteValue)) {
+        value = noteValue;
       }
 
-      return <NoteCell noteValue={noteValue} key={notePosition} />;
+      return <NoteCell value={value} key={noteValue} />;
     });
   };
 
