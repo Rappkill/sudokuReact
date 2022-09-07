@@ -21,8 +21,6 @@ function SudokuGame(): JSX.Element {
   const [history, setHistory] = useState<SudokuCell[]>([]);
   const [resetTimer, setResetTimer] = useState<boolean>(false);
 
-  function validateAndUpdatePuzzle() {}
-
   const updateSelectedCellValue = useCallback(
     (value: number | null) => {
       if (selectedCell.isReadOnly) {
@@ -33,11 +31,10 @@ function SudokuGame(): JSX.Element {
       setHistory([...history]);
 
       const newSelectedCell = JSON.parse(JSON.stringify(selectedCell));
-      if (value === null) {
+
+      if (value == null) {
         newSelectedCell.notes = [];
         newSelectedCell.value = null;
-
-        return;
       }
 
       if (isNotesActive) {
@@ -45,22 +42,31 @@ function SudokuGame(): JSX.Element {
         if (!newSelectedCell.notes.includes(value)) {
           newSelectedCell.notes.push(value);
         } else {
-          // TODO: delete value from sudokuCell.notes
+          newSelectedCell.notes = newSelectedCell.notes.filter(
+            (note: number) => note !== value
+          );
         }
       } else {
-        newSelectedCell.notes = [];
-        newSelectedCell.value = value;
+        if (newSelectedCell.value == value) {
+          newSelectedCell.value = null;
+        } else {
+          newSelectedCell.notes = [];
+          newSelectedCell.value = value;
+        }
       }
 
       const sudokuCellIndex = sudokuPuzzle.findIndex(
         (item) => item.id == newSelectedCell.id
       );
+      console.log(newSelectedCell);
+
       sudokuPuzzle[sudokuCellIndex] = newSelectedCell;
+      console.log(newSelectedCell);
 
       checkWrongNumbers(sudokuPuzzle);
 
-      setSudokuPuzzle([...sudokuPuzzle]);
       setSelectedCell(newSelectedCell);
+      setSudokuPuzzle([...sudokuPuzzle]);
     },
     [selectedCell, history, isNotesActive, sudokuPuzzle]
   );
